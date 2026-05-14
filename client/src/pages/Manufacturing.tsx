@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Wrench, CheckCircle } from 'lucide-react';
+import { Wrench, CheckCircle, Trash2 } from 'lucide-react';
 
 const Manufacturing = () => {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -19,27 +19,40 @@ const Manufacturing = () => {
     fetchTasks();
   };
 
+  const handleDelete = async (id: string) => {
+    if (window.confirm('Are you sure you want to delete this manufacturing task?')) {
+      await axios.delete(`http://localhost:5000/api/manufacturing/${id}`);
+      fetchTasks();
+    }
+  };
+
   return (
     <div>
-      <h2 className="text-3xl font-bold text-slate-800 mb-8">Manufacturing Floor</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tasks.map(task => (
-          <div key={task._id} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col">
+          <div key={task._id} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col relative group">
+            <button
+              onClick={() => handleDelete(task._id)}
+              className="absolute top-4 right-4 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <Trash2 size={18} />
+            </button>
             <div className="flex justify-between items-start mb-4">
               <div className="bg-purple-100 text-purple-600 p-3 rounded-lg">
                 <Wrench size={24} />
               </div>
-              <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                task.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-              }`}>
+              <span className={`px-3 py-1 rounded-full text-xs font-medium mr-8 ${task.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                }`}>
                 {task.status}
               </span>
             </div>
-            
-            <h3 className="font-bold text-lg mb-1">Convert Jumbo Rolls to POS</h3>
+
+            <h3 className="font-bold text-lg mb-1">
+              {task.orderId?.product === 'A4 Paper Reams' ? 'Convert Uncut A4 to A4 Reams' : 'Convert Jumbo Rolls to POS'}
+            </h3>
             <p className="text-slate-500 text-sm mb-4">Order Ref: {task.orderId?._id.substring(task.orderId._id.length - 6)}</p>
-            
+
             <div className="bg-slate-50 p-3 rounded-lg mb-6 border border-slate-100">
               <div className="flex justify-between text-sm mb-1">
                 <span className="text-slate-500">Product:</span>
@@ -53,8 +66,8 @@ const Manufacturing = () => {
 
             <div className="mt-auto">
               {task.status !== 'Completed' ? (
-                <button 
-                  onClick={() => markComplete(task._id)} 
+                <button
+                  onClick={() => markComplete(task._id)}
                   className="w-full bg-green-600 text-white p-3 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center justify-center"
                 >
                   <CheckCircle size={18} className="mr-2" /> Mark as Completed

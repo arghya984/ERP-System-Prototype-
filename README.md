@@ -31,19 +31,45 @@ graph TD
 
 ### Prerequisites
 - Node.js (v18+ recommended)
-- MongoDB Atlas cluster (or local MongoDB)
+- MongoDB (Local installation or MongoDB Atlas cluster)
 
-### Environment Variables
+### 1. Environment Configuration
+
+**Backend:**
 1. Navigate to the `server` directory.
 2. Copy `.env.example` to `.env`.
-3. Add your MongoDB connection string to `MONGODB_URI`.
+3. Update `MONGODB_URI` with your connection string (Atlas or Local).
 
-### Running Locally
+**Frontend (Optional):**
+1. Navigate to the `client` directory.
+2. Copy `.env.example` to `.env`.
+3. (Optional) Update `VITE_API_URL` if your backend runs on a different port.
+
+### 2. Installation & Database Seeding
+
+**Install Backend Dependencies:**
+```bash
+cd server
+npm install
+```
+
+**Seed Dummy Data (Recommended):**
+Run this command to populate your database with initial leads, orders, and inventory:
+```bash
+npm run seed
+```
+
+**Install Frontend Dependencies:**
+```bash
+cd client
+npm install
+```
+
+### 3. Running Locally
 
 **Start the Backend Server:**
 ```bash
 cd server
-npm install
 npm run dev
 ```
 *(The backend will run on http://localhost:5000)*
@@ -51,10 +77,16 @@ npm run dev
 **Start the Frontend Application:**
 ```bash
 cd client
-npm install
 npm run dev
 ```
-*(The frontend will run on http://localhost:5173 by default)*
+*(The frontend will run on http://localhost:5173)*
+
+## The "Golden Path" Workflow
+To test the full capability of the ERP:
+1. **CRM**: Create a new lead or use a seeded one. Click **"Push"** to move them to Sales.
+2. **Sales**: Select the lead and create an order. Click **"Trigger Mfg"** to start production.
+3. **Manufacturing**: Find the task and click **"Mark as Completed"**.
+4. **Warehouse**: Observe that Raw Materials were automatically deducted and Finished Products were added to stock!
 
 ## API Documentation
 

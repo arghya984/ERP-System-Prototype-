@@ -17,13 +17,17 @@ app.use('/api/manufacturing', require('./routes/manufacturing'));
 app.use('/api/inventory', require('./routes/inventory'));
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/erp-demo')
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/erp-demo';
+const isAtlas = MONGODB_URI.includes('mongodb+srv');
+
+mongoose.connect(MONGODB_URI)
   .then(() => {
-    console.log('Connected to MongoDB');
+    console.log(`✅ Connected to MongoDB [${isAtlas ? '☁️  Atlas (Cloud)' : '💻 Local'}]`);
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`🚀 Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
-    console.error('MongoDB connection error:', err);
+    console.error('❌ MongoDB connection error:', err.message);
+    process.exit(1);
   });

@@ -51,16 +51,26 @@ router.patch('/:id', async (req, res) => {
       // 1. Update order status
       await Order.findByIdAndUpdate(task.orderId, { status: 'Completed' });
 
+      // Dynamic Inventory Update
+      const targetProduct = task.orderId.product;
+      let rawMaterialName = '';
+
+      if (targetProduct === 'GSM 55 Thermal Paper (POS Rolls)') {
+        rawMaterialName = 'Thermal Jumbo Rolls';
+      } else if (targetProduct === 'A4 Paper Reams') {
+        rawMaterialName = 'Uncut A4 Paper Rolls';
+      }
+
       // 2. Decrement raw material
-      const rawMaterial = await InventoryItem.findOne({ type: 'Raw Material' });
+      const rawMaterial = await InventoryItem.findOne({ name: rawMaterialName, type: 'Raw Material' });
       if (rawMaterial) {
-        rawMaterial.quantity -= task.orderId.quantity; // assuming 1:1 for demo
+        rawMaterial.quantity -= task.orderId.quantity; // 1:1 ratio
         if(rawMaterial.quantity < 0) rawMaterial.quantity = 0;
         await rawMaterial.save();
       }
 
       // 3. Increment finished product
-      const finishedProduct = await InventoryItem.findOne({ type: 'Finished Product' });
+      const finishedProduct = await InventoryItem.findOne({ name: targetProduct, type: 'Finished Product' });
       if (finishedProduct) {
         finishedProduct.quantity += task.orderId.quantity;
         await finishedProduct.save();
@@ -70,6 +80,17 @@ router.patch('/:id', async (req, res) => {
     res.json(updatedTask);
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+});
+
+// Delete task
+router.delete('/:id', async (req, res) => {
+  try {
+    const task = await ManufacturingTask.findByIdAndDelete(req.params.id);
+    if (!task) return res.status(404).json({ message: 'Task not found' });
+    res.json({ message: 'Task deleted' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
