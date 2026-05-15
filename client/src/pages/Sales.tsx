@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import api from '../api';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingCart, ArrowRight, Trash2, Edit2, Check, X } from 'lucide-react';
@@ -24,7 +24,7 @@ const Sales = () => {
     fetchOrders();
   }, []);
 
-  const handleCreateOrder = async (e: React.FormEvent) => {
+  const handleCreateOrder = async (e: FormEvent) => {
     e.preventDefault();
     if (!initialLead) return alert('Please select a lead from CRM first!');
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from 'react';
+import { useState, useEffect, Fragment, FormEvent } from 'react';
 import api from '../api';
 import { useNavigate } from 'react-router-dom';
 import { PlusCircle, ArrowRight, Trash2, Edit2, Check, X, Search, ChevronDown, ChevronUp, History } from 'lucide-react';
@@ -31,7 +31,7 @@ const CRM = () => {
     fetchData();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     await api.post('/api/leads', { name, company, email });
     setName(''); setCompany(''); setEmail('');

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import api from '../api';
 import { Package, ArrowDown, ArrowUp, Database, PlusCircle, Trash2, Edit2, Check, X } from 'lucide-react';
 
@@ -27,7 +27,7 @@ const Warehouse = () => {
     }
   };
 
-  const handleCreateItem = async (e: React.FormEvent) => {
+  const handleCreateItem = async (e: FormEvent) => {
     e.preventDefault();
     await api.post('/api/inventory', {
       name: newItemName,
