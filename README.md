@@ -100,25 +100,6 @@ cd client
 npm run dev
 ```
 
----
-
-## 🚀 Deployment Guide
-
-This project is optimized for modern cloud hosting platforms.
-
-### Backend: [Render](https://render.com)
-- **Root Directory**: `server`
-- **Build Command**: `npm install`
-- **Start Command**: `node server.js`
-- **Env Variable**: `MONGODB_URI` (Atlas connection string)
-
-### Frontend: [Vercel](https://vercel.com)
-- **Root Directory**: `client`
-- **Framework Preset**: Vite
-- **Build Command**: `npm run build`
-- **Env Variable**: `VITE_API_URL` (Your Render backend URL)
-
----
 
 ## 🔄 The "Golden Path" Workflow
 To test the full capability of the ERP:
@@ -133,4 +114,3 @@ To test the full capability of the ERP:
 - **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, Lucide Icons.
 - **Backend**: Node.js, Express.
 - **Database**: MongoDB (Mongoose ODM).
-- **Hosting**: Vercel (Frontend), Render (Backend).
