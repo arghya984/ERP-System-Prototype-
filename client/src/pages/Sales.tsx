@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
+import api from '../api';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingCart, ArrowRight, Trash2, Edit2, Check, X } from 'lucide-react';
 
@@ -16,7 +16,7 @@ const Sales = () => {
   const initialLead = location.state?.lead;
 
   const fetchOrders = async () => {
-    const res = await axios.get('http://localhost:5000/api/orders');
+    const res = await api.get('/api/orders');
     setOrders(res.data);
   };
 
@@ -28,7 +28,7 @@ const Sales = () => {
     e.preventDefault();
     if (!initialLead) return alert('Please select a lead from CRM first!');
 
-    await axios.post('http://localhost:5000/api/orders', {
+    await api.post('/api/orders', {
       leadId: initialLead._id,
       product,
       quantity
@@ -40,7 +40,7 @@ const Sales = () => {
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this order?')) {
-      await axios.delete(`http://localhost:5000/api/orders/${id}`);
+      await api.delete(`/api/orders/${id}`);
       fetchOrders();
     }
   };
@@ -51,13 +51,13 @@ const Sales = () => {
   };
 
   const handleEditSubmit = async (id: string) => {
-    await axios.put(`http://localhost:5000/api/orders/${id}`, editForm);
+    await api.put(`/api/orders/${id}`, editForm);
     setEditingId(null);
     fetchOrders();
   };
 
   const triggerManufacturing = async (orderId: string) => {
-    await axios.post('http://localhost:5000/api/manufacturing', { orderId });
+    await api.post('/api/manufacturing', { orderId });
     fetchOrders();
     navigate('/manufacturing');
   };

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
+import api from '../api';
 import { Package, ArrowDown, ArrowUp, Database, PlusCircle, Trash2, Edit2, Check, X } from 'lucide-react';
 
 const Warehouse = () => {
@@ -12,7 +12,7 @@ const Warehouse = () => {
   const [editForm, setEditForm] = useState({ name: '', type: '' });
 
   const fetchInventory = async () => {
-    const res = await axios.get('http://localhost:5000/api/inventory');
+    const res = await api.get('/api/inventory');
     setInventory(res.data);
   };
 
@@ -22,14 +22,14 @@ const Warehouse = () => {
 
   const initializeInventory = async () => {
     if (window.confirm('This will delete all current inventory and seed default data. Continue?')) {
-      await axios.post('http://localhost:5000/api/inventory/init');
+      await api.post('/api/inventory/init');
       fetchInventory();
     }
   };
 
   const handleCreateItem = async (e: React.FormEvent) => {
     e.preventDefault();
-    await axios.post('http://localhost:5000/api/inventory', {
+    await api.post('/api/inventory', {
       name: newItemName,
       type: newItemType,
       quantity: newItemQuantity
@@ -40,13 +40,13 @@ const Warehouse = () => {
 
   const updateQuantity = async (id: string, newQuantity: number) => {
     if (newQuantity < 0) return;
-    await axios.patch(`http://localhost:5000/api/inventory/${id}`, { quantity: newQuantity });
+    await api.patch(`/api/inventory/${id}`, { quantity: newQuantity });
     fetchInventory();
   };
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
-      await axios.delete(`http://localhost:5000/api/inventory/${id}`);
+      await api.delete(`/api/inventory/${id}`);
       fetchInventory();
     }
   };
@@ -57,7 +57,7 @@ const Warehouse = () => {
   };
 
   const handleEditSubmit = async (id: string) => {
-    await axios.put(`http://localhost:5000/api/inventory/${id}`, editForm);
+    await api.put(`/api/inventory/${id}`, editForm);
     setEditingId(null);
     fetchInventory();
   };

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
+import api from '../api';
 import { Wrench, CheckCircle, Trash2 } from 'lucide-react';
 
 const Manufacturing = () => {
   const [tasks, setTasks] = useState<any[]>([]);
 
   const fetchTasks = async () => {
-    const res = await axios.get('http://localhost:5000/api/manufacturing');
+    const res = await api.get('/api/manufacturing');
     setTasks(res.data);
   };
 
@@ -15,13 +15,13 @@ const Manufacturing = () => {
   }, []);
 
   const markComplete = async (id: string) => {
-    await axios.patch(`http://localhost:5000/api/manufacturing/${id}`, { status: 'Completed' });
+    await api.patch(`/api/manufacturing/${id}`, { status: 'Completed' });
     fetchTasks();
   };
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this manufacturing task?')) {
-      await axios.delete(`http://localhost:5000/api/manufacturing/${id}`);
+      await api.delete(`/api/manufacturing/${id}`);
       fetchTasks();
     }
   };

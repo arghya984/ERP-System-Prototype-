@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect, Fragment } from 'react';
+import api from '../api';
 import { useNavigate } from 'react-router-dom';
 import { PlusCircle, ArrowRight, Trash2, Edit2, Check, X, Search, ChevronDown, ChevronUp, History } from 'lucide-react';
 
@@ -20,8 +20,8 @@ const CRM = () => {
 
   const fetchData = async () => {
     const [leadsRes, ordersRes] = await Promise.all([
-      axios.get('http://localhost:5000/api/leads'),
-      axios.get('http://localhost:5000/api/orders')
+      api.get('/api/leads'),
+      api.get('/api/orders')
     ]);
     setLeads(leadsRes.data);
     setAllOrders(ordersRes.data);
@@ -33,14 +33,14 @@ const CRM = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await axios.post('http://localhost:5000/api/leads', { name, company, email });
+    await api.post('/api/leads', { name, company, email });
     setName(''); setCompany(''); setEmail('');
     fetchData();
   };
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this lead?')) {
-      await axios.delete(`http://localhost:5000/api/leads/${id}`);
+      await api.delete(`/api/leads/${id}`);
       fetchData();
     }
   };
@@ -51,7 +51,7 @@ const CRM = () => {
   };
 
   const handleEditSubmit = async (id: string) => {
-    await axios.put(`http://localhost:5000/api/leads/${id}`, editForm);
+    await api.put(`/api/leads/${id}`, editForm);
     setEditingId(null);
     fetchData();
   };
@@ -116,7 +116,7 @@ const CRM = () => {
           </thead>
           <tbody>
             {filteredLeads.map(lead => (
-              <React.Fragment key={lead._id}>
+              <Fragment key={lead._id}>
                 <tr className={`border-b border-slate-100 hover:bg-slate-50 transition-colors ${expandedRow === lead._id ? 'bg-slate-50' : ''}`}>
                   {editingId === lead._id ? (
                     <>
@@ -199,7 +199,7 @@ const CRM = () => {
                     </td>
                   </tr>
                 )}
-              </React.Fragment>
+              </Fragment>
             ))}
             {filteredLeads.length === 0 && (
               <tr><td colSpan={4} className="p-8 text-center text-slate-500">

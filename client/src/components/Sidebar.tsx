@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Users, ShoppingCart, Wrench, Package, X } from 'lucide-react';
 
